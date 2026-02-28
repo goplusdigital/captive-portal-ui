@@ -15,7 +15,7 @@ export default function Home() {
           Welcome to Captive Portal
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Please log in to access the internet.
+          Please log in to access the internet. This portal is designed to manage your internet access securely and efficiently. If you have any questions, please contact our support team.
         </p>
       </div>
     </div>
