@@ -4,6 +4,7 @@ import "./globals.css";
 import 'sweetalert2/dist/sweetalert2.css'
 import LiffProvider from "./libs/LiffProvider";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 // local font example
 import localFont from "next/font/local"
 const fontPrompt = localFont({
@@ -50,6 +51,7 @@ export default function RootLayout({
       >
         <LiffProvider>{children}</LiffProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
