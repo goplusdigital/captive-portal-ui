@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'sweetalert2/dist/sweetalert2.css'
 import LiffProvider from "./libs/LiffProvider";
+import { Analytics } from "@vercel/analytics/next"
 // local font example
 import localFont from "next/font/local"
 const fontPrompt = localFont({
@@ -48,7 +49,7 @@ export default function RootLayout({
         className={`${fontPrompt.className} antialiased`}
       >
         <LiffProvider>{children}</LiffProvider>
-
+        <Analytics />
       </body>
     </html>
   );
