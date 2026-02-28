@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation"
 import { useTenant } from "@/app/libs/TenantProvider";
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { adjustColor, getContrastColor } from "../../libs/colors"
 import { useState } from "react"
 import { Button, Checkbox, Label, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "flowbite-react";
@@ -25,16 +25,13 @@ export default function Authorize() {
   const [passwordError, setPasswordError] = useState("")
   const [loading, setLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState("กำลังตรวจสอบบัญชี...")
+  const [termsContent, setTermsContent] = useState("")
+  const [termsTitle, setTermsTitle] = useState("Terms of Service")
   const apiBase = process.env.NEXT_PUBLIC_CAPTIVE_API_BASE || "https://captive.goplus.co.th"
   const apiKey = process.env.NEXT_PUBLIC_CAPTIVE_API_KEY || ""
 
 
-  if (!tenant) {
-    return <div className="flex flex-col items-center justify-center h-screen font-bold">
-      <Image src="/assets/icons/loading.gif" alt="Loading" width={100} height={100} className="mb-1" loading="eager" />
-      <p>Loading...</p>
-    </div>
-  }
+
   // bg color is set from tenant config in layout.tsx, so we can use tenant flags to determine the bg color here
   const bgColor = tenant?.bg_color;
   const darker = useMemo(() => adjustColor(bgColor, -25), [bgColor])
@@ -63,6 +60,13 @@ export default function Authorize() {
       )
     `
   }), [bgColor, lighter, darker])
+
+  useEffect(() => {
+    if (tenant && tenant.id) {
+      fetchTerms(tenant.id)
+    }
+  }, [tenant])
+
 
   const doLogin = () => {
     let hasError = false
@@ -172,6 +176,39 @@ export default function Authorize() {
 
   }
 
+
+  const fetchTerms = async (tenantId: string) => {
+    try {
+      const res = await fetch(`${apiBase}/api/portal/tenant/${tenantId}/terms`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_CAPTIVE_API_KEY}`
+        },
+      })
+
+      if (!res.ok) {
+        console.error('Failed to fetch terms:', res.statusText)
+        return null
+      }
+
+      const data = await res.json()
+      //   return data
+      setTermsContent(data.terms.contents.th.content || "No terms provided.")
+      setTermsTitle(data.terms.contents.th.title || "Terms of Service")
+    } catch (error) {
+      console.error('Error fetching terms:', error)
+      return null
+    }
+  }
+
+  if (!tenant) {
+    return <div className="flex flex-col items-center justify-center h-screen font-bold">
+      <Image src="/assets/icons/loading.gif" alt="Loading" width={100} height={100} className="mb-1" loading="eager" />
+      <p>Loading...</p>
+    </div>
+  }
+
   return (
     <div className={`flex min-h-screen  justify-center dark:bg-black py-5 px-5`}
       style={backgroundStyle}
@@ -193,15 +230,16 @@ export default function Authorize() {
             >
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
-                 
+
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
                       Terms of Service
                     </DialogTitle>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 overflow-y-auto max-h-96">
-                       {tenant && <Terms tenant={tenant} />}
-                      </p>
+                      <div className="text-sm text-gray-500 overflow-y-auto max-h-96 text-start">
+                        <div dangerouslySetInnerHTML={{ __html: termsContent }}></div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
