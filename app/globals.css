@@ -40,3 +40,27 @@ body {
   font-size:14px;
   padding: 0px 0px !important;
 }
+
+.animate-circle {
+  stroke-dasharray: 157;
+  stroke-dashoffset: 157;
+  animation: draw-circle 0.6s ease-out forwards;
+}
+
+.animate-check {
+  stroke-dasharray: 36;
+  stroke-dashoffset: 36;
+  animation: draw-check 0.4s ease-out 0.6s forwards;
+}
+
+@keyframes draw-circle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
