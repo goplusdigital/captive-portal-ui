@@ -42,7 +42,7 @@ export default function Terms({ tenant }: { tenant: any }) {
   const terms = tenant.terms_en || tenant.terms_th || "No terms provided."
 
   return (
-    <div>
+    <div className="text-start">
       <div  dangerouslySetInnerHTML={{ __html: termsContent }}></div>
     </div>
   )

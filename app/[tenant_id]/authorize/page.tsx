@@ -10,7 +10,7 @@ import { useState } from "react"
 import { Button, Checkbox, Label, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "flowbite-react";
 import Terms from "./terms";
 import Swal from "sweetalert2";
-
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
 export default function Authorize() {
   const tenant = useTenant()
@@ -164,7 +164,7 @@ export default function Authorize() {
 
 
       document.body.appendChild(form)
-      
+
       form.submit()
     }, 1500)
 
@@ -176,18 +176,59 @@ export default function Authorize() {
     <div className={`flex min-h-screen  justify-center dark:bg-black py-5 px-5`}
       style={backgroundStyle}
     >
-      <Modal show={openTermsModal} onClose={() => setOpenTermsModal(false)}>
-        <ModalHeader>Terms of Service</ModalHeader>
-        <ModalBody className="max-h-[60vh] overflow-y-auto m-2 text-xs">
-          {tenant && <Terms tenant={tenant} />}
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={() => { setAcceptTerms(true); setOpenTermsModal(false); }}>I accept</Button>
-          <Button color="alternative" onClick={() => { setAcceptTerms(false); setOpenTermsModal(false); }}>
-            Decline
-          </Button>
-        </ModalFooter>
-      </Modal>
+
+
+
+      <Dialog open={openTermsModal} onClose={() => setOpenTermsModal(false)} className="relative z-10">
+        <DialogBackdrop
+          transition
+          className="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
+        />
+
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <DialogPanel
+              transition
+              className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
+            >
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                 
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
+                      Terms of Service
+                    </DialogTitle>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500 overflow-y-auto max-h-96">
+                       {tenant && <Terms tenant={tenant} />}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <button
+                  type="button"
+                  onClick={() => { setAcceptTerms(true); setOpenTermsModal(false); }}
+                  className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                >
+                  I accept
+                </button>
+                <button
+                  type="button"
+                  data-autofocus
+                  onClick={() => { setAcceptTerms(false); setOpenTermsModal(false); }}
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                >
+                  Decline
+                </button>
+              </div>
+            </DialogPanel>
+          </div>
+        </div>
+      </Dialog>
+
+
       <div className="flex flex-col items-center gap-6 text-center rounded-2xl bg-white dark:bg-zinc-800 p-10 shadow-md relative w-full max-w-md mt-16 pt-16">
         <div className="flex flex-col items-center gap-6 text-center absolute -top-12">
           {tenant.logo === null || tenant.logo === "null" || tenant.logo === "" || tenant.logo === undefined ? (
