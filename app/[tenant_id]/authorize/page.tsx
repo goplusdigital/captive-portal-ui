@@ -27,7 +27,7 @@ export default function Authorize() {
   const [loading, setLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState("กำลังตรวจสอบบัญชี...")
   const [termsContent, setTermsContent] = useState("")
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(true)
   const [termsTitle, setTermsTitle] = useState("Terms of Service")
   const apiBase = process.env.NEXT_PUBLIC_CAPTIVE_API_BASE || "https://captive.goplus.co.th"
   const apiKey = process.env.NEXT_PUBLIC_CAPTIVE_API_KEY || ""

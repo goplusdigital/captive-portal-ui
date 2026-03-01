@@ -1,7 +1,7 @@
 "use client";
 export default function SuccessBlock({ params, className }: { params: { tenant_id: string} } & { className?: string }) {
     return (
-        <div className={`flex flex-col items-center justify-center min-h-screen py-2 ${className}`}>
+        <div className={`flex flex-col items-center justify-center min-h-screen py-2 px-4 ${className}`}>
             <div className="flex items-center justify-center w-24 h-24 mb-4 rounded-full bg-green-100">
                 <svg
                     className="w-24 h-24 text-green-500"
@@ -28,7 +28,7 @@ export default function SuccessBlock({ params, className }: { params: { tenant_i
                 </svg>
             </div>
             <h1 className="text-4xl font-bold mb-4">Success!</h1>
-            <p className="text-lg text-gray-600">You have successfully connected to the internet. Please enjoy your browsing experience.</p>
+            <p className="text-lg text-gray-600 text-center">You have successfully connected to the internet. Please enjoy your browsing experience.</p>
         </div>
     )
 }
