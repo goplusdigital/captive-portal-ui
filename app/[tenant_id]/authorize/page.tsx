@@ -11,6 +11,7 @@ import { Button, Checkbox, Label, Modal, ModalBody, ModalFooter, ModalHeader, Sp
 import Terms from "./terms";
 import Swal from "sweetalert2";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import SuccessBlock from "./success";
 
 export default function Authorize() {
   const tenant = useTenant()
@@ -26,6 +27,7 @@ export default function Authorize() {
   const [loading, setLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState("กำลังตรวจสอบบัญชี...")
   const [termsContent, setTermsContent] = useState("")
+  const [success, setSuccess] = useState(false)
   const [termsTitle, setTermsTitle] = useState("Terms of Service")
   const apiBase = process.env.NEXT_PUBLIC_CAPTIVE_API_BASE || "https://captive.goplus.co.th"
   const apiKey = process.env.NEXT_PUBLIC_CAPTIVE_API_KEY || ""
@@ -110,6 +112,7 @@ export default function Authorize() {
       .then(data => {
         if (data.success) {
           // new form
+          setSuccess(true)
           handleArubaInstantOnLogin()
         } else {
           Swal.fire({
@@ -140,7 +143,8 @@ export default function Authorize() {
   }
   const handleArubaInstantOnLogin = () => {
     setLoading(true)
-    setLoadingMessage("กำลังเชื่อมต่ออินเทอร์เน็ต...")
+    // return;
+    // setLoadingMessage("กำลังเชื่อมต่ออินเทอร์เน็ต...")
     setTimeout(() => {
       const form = document.createElement("form")
       form.method = "POST"
@@ -210,12 +214,11 @@ export default function Authorize() {
   }
 
   return (
-    <div className={`flex min-h-screen  justify-center dark:bg-black py-5 px-5`}
+    <>
+    <SuccessBlock params={{ tenant_id: tenant.id }} className={success ? "block" : "hidden"} />
+    <div className={`flex min-h-screen  justify-center dark:bg-black py-5 px-5 ${success ? "hidden" : "block"}`}
       style={backgroundStyle}
     >
-
-
-
       <Dialog open={openTermsModal} onClose={() => setOpenTermsModal(false)} className="relative z-10">
         <DialogBackdrop
           transition
@@ -266,7 +269,7 @@ export default function Authorize() {
         </div>
       </Dialog>
 
-
+      
       <div className="flex flex-col items-center gap-6 text-center rounded-2xl bg-white dark:bg-zinc-800 p-10 shadow-md relative w-full max-w-md mt-16 pt-16">
         <div className="flex flex-col items-center gap-6 text-center absolute -top-12">
           {tenant.logo === null || tenant.logo === "null" || tenant.logo === "" || tenant.logo === undefined ? (
@@ -433,5 +436,6 @@ export default function Authorize() {
 
 
     </div>
+    </>
   );
 }
